@@ -133,18 +133,18 @@ routerCart.get('/:id/productos', async(req, res) => {
 
 routerCart.delete('/:id/productos/:id_prod', async(req, res) => {
     const {id, id_prod } = req.params;
-    const productExists = await contenedor.getById(id_prod);
+    const productExists = await carrito.getById(id);
     if (productExists) {
         const cartExists = await carrito.removeFromArrayById(id, id_prod, 'products')
         cartExists
             ? res.status(200).json({"success" : "Producto eliminado"})
-            : res.status(404).json({"error": "Carrito no enontrado"})
+            : res.status(404).json({"error": "Producto no encontrado"})
     } else {
-        res.status(404).json({"error": "Producto no encontrado"})
+        res.status(404).json({"error": "Carrito no encontrado"})
     }
 })
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8089;
 const server = app.listen(PORT, () => {
 console.log(` Server running http://localhost:${PORT}`)
 })

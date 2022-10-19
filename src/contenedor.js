@@ -27,7 +27,6 @@ class Contenedor {
     try {
       const data = await this.getData();
       const parsedData = JSON.parse(data);
-
       return parsedData.find((producto) => producto.id === id);
     } catch (error) {
       console.log(
@@ -114,7 +113,7 @@ class Contenedor {
         await fs.promises.writeFile(this._filename, JSON.stringify(parsedData));
         return true;
       } else {
-        console.log(`ID ${id} does not exist in the file`);
+        console.log(`ID ${id} no existe en el archivo`);
         return false;
       }
 
@@ -130,16 +129,14 @@ class Contenedor {
     try {
       id = Number(id);
       const data = await this.getData();
-      const parsedData = JSON.parse(data);
+      const parsedData = JSON.parse(data); 
       
       const objectIdToBeUpdated = parsedData.find(
-        (producto) => producto.id === id
+        (producto) => producto.id === id              
       );
-      
-      if (objectIdToBeUpdated) {
-        const index = parsedData.indexOf(objectIdToBeUpdated);
-        
-        const valorActual = parsedData[index][keyName];
+      const index = parsedData.indexOf(objectIdToBeUpdated);
+      const valorActual = parsedData[index][keyName]; 
+      if (Number(valorActual[0].id) == Number(objectToRemoveId)) {
         let indexToBeRemoved = -1;
         valorActual.forEach((element, indexE) => {
           if(element.id == objectToRemoveId) {
@@ -149,7 +146,6 @@ class Contenedor {
         const newArray = [...valorActual];
         
         if (indexToBeRemoved>-1) {
-          console.log(indexToBeRemoved)
           newArray.splice(indexToBeRemoved,1)
         }
     
@@ -173,7 +169,7 @@ class Contenedor {
         const allData = await this.getData();
         const parsedData = JSON.parse(allData);
   
-        object.id = parsedData.length + 1;
+        object.id = parsedData.length > 0 ? parsedData[parsedData.length-1].id +1 : 1;
         parsedData.push(object);
   
         await fs.promises.writeFile(this._filename, JSON.stringify(parsedData));
