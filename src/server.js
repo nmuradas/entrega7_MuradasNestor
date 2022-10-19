@@ -1,3 +1,4 @@
+const { json } = require('express');
 const express = require('express');
 const app = express();
 const Contenedor = require('./contenedor')
@@ -20,6 +21,9 @@ const routerCart = express.Router();
 
 app.use('/api/productos', routerProducts);
 app.use('/api/carrito', routerCart);
+app.use('*', (req, res) => {
+    const id = req.params[0]
+    res.status(404).json({"error":"Ruta no implementada", "ruta":id , "metodo": "GET"})});
 
 /* ------------------------ Productos ------------------------ */
 
