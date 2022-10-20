@@ -7,11 +7,15 @@ class Contenedor {
   }
   
   _validateKeysExist(newData) {
+    console.log(newData)
     
     const objectKeys = Object.keys(newData);
+    console.log(objectKeys)
     let exists = true;
     
     objectKeys.forEach((key) => {
+      console.log('corte')
+      console.log(this._keys)
       if(!this._keys.includes(key)) {
         exists = false;
         
