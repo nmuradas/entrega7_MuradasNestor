@@ -3,7 +3,7 @@ const fs = require("fs");
 class Contenedor {
   constructor(fileName, keys) {
     this._filename = fileName;
-    this._keys = [...keys, "id"];
+    this._keys = [...keys];
   }
   
   _validateKeysExist(newData) {
@@ -29,8 +29,7 @@ class Contenedor {
   async getById(id) {
     id = Number(id);
     try {
-      const data = await this.getData();
-      const parsedData = JSON.parse(data);
+      const parsedData = await this.getAll();
       return parsedData.find((producto) => producto.id === id);
     } catch (error) {
       console.log(
@@ -42,8 +41,7 @@ class Contenedor {
   async deleteById(id) {
     try {
       id = Number(id);
-      const data = await this.getData();
-      const parsedData = JSON.parse(data);
+      const parsedData = await this.getAll();
       const objectIdToBeRemoved = parsedData.find(
         (producto) => producto.id === id
       );
@@ -68,7 +66,7 @@ class Contenedor {
     if(this._validateKeysExist(newData)){
       try {
         id = Number(id);
-        const data = await this.getData();
+        const data = await this.getAll();
         const parsedData = JSON.parse(data);
         const objectIdToBeUpdated = parsedData.find(
           (producto) => producto.id === id
@@ -103,8 +101,7 @@ class Contenedor {
     if(this._validateKeysExist(objectToAdd)) {
     try {
       id = Number(id);
-      const data = await this.getData();
-      const parsedData = JSON.parse(data);
+      const parsedData = await this.getAll();
       const objectIdToBeUpdated = parsedData.find(
         (producto) => producto.id === id
       );
@@ -132,8 +129,7 @@ class Contenedor {
   async removeFromArrayById(id, objectToRemoveId, keyName) {
     try {
       id = Number(id);
-      const data = await this.getData();
-      const parsedData = JSON.parse(data); 
+      const parsedData = await this.getAll();
       
       const objectIdToBeUpdated = parsedData.find(
         (producto) => producto.id === id              
@@ -170,8 +166,7 @@ class Contenedor {
   async save(object) {    
     if(this._validateKeysExist(object)) {
       try {
-        const allData = await this.getData();
-        const parsedData = JSON.parse(allData);
+        const parsedData = await this.getAll();
   
         object.id = parsedData.length > 0 ? parsedData[parsedData.length-1].id +1 : 1;
         parsedData.push(object);
@@ -199,13 +194,9 @@ class Contenedor {
     }
   }
 
-  async getData() {
-    const data = await fs.promises.readFile(this._filename, "utf-8");
-    return data;
-  }
 
   async getAll() {
-    const data = await this.getData();
+    const data = await fs.promises.readFile(this._filename, "utf-8");
     return JSON.parse(data);
   }
 }
